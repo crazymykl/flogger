@@ -1,0 +1,25 @@
+{
+  "name": "flogger",
+  "main": "./lib/flogger",
+  "version": "0.0.0",
+  "description": "A plugin that puts `flog` code complexity data into a gutter",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "flogger:toggle"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
+  "repository": "https://github.com/crazymykl/flogger",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
