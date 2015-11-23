@@ -1,10 +1,9 @@
 {
   "name": "flogger",
   "main": "./lib/flogger",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A plugin that puts `flog` code complexity data into a gutter",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
     "atom-workspace": "flogger:toggle"
   },
@@ -20,6 +19,5 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
