@@ -4,6 +4,7 @@ module.exports = Flogger =
   markers: null
   activeEditors: null
   subscriptions: null
+  statusBarTile: null
 
   activate: (state) ->
     @markers = []
@@ -43,7 +44,6 @@ module.exports = Flogger =
 
   toggle: ->
     return unless te = atom.workspace.getActiveTextEditor()
-    console.log 'Flogger was toggled!'
 
     if (updater = @activeEditors[te.id])?
       @subscriptions.remove updater
@@ -61,9 +61,9 @@ module.exports = Flogger =
 
   watchEditor: (te) ->
     return unless te?.getGrammar()?.name is 'Ruby' and @activeEditors[te.id]?
-    @update te.getText()
+    @update te
 
-  update: (code) ->
+  update: (te) ->
     output = ''
 
     process = new BufferedProcess
@@ -76,18 +76,18 @@ module.exports = Flogger =
         else
           [[total, per_method], methods] = @parse output
           @setStatus "Complexity: #{total} (#{per_method}/method)"
-          @setGutter methods
+          @setGutter te, methods
     .process
 
     if process.stdin.writable
-      process.stdin.write code
+      process.stdin.write te.getText()
       process.stdin.end()
 
   setStatus: (status) ->
     @status?.textContent = status
 
-  setGutter: (methods) ->
-    te = atom.workspace.getActiveTextEditor()
+  setGutter: (te, methods) ->
+    #te = atom.workspace.getActiveTextEditor()
     g = te.gutterWithName('flogger') ? te.addGutter name: 'flogger'
 
     marker.destroy() for marker in @markers
@@ -100,7 +100,6 @@ module.exports = Flogger =
       d.textContent = complexity
       g.decorateMarker m, item: d, class: 'flogger'
       @markers.push m
-
 
   classify: (complexity) ->
     switch
