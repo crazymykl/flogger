@@ -4,22 +4,24 @@
 // for a full listing of what's available.
 @import "ui-variables";
 
-.flogger {
-  width: 100%;
-  text-align: center;
-  background-color: #323232;
+atom-text-editor::shadow, atom-text-editor {
+  .flogger {
+    width: 100%;
+    text-align: center;
+    background-color: #323232;
 
-  .low {
-    color: #a5c261;
+    .low {
+      color: #a5c261;
+    }
+    .medium {
+      color: #ffc66d;
+    }
+    .high {
+      color: #cc7833;
+    }
   }
-  .medium {
-    color: #ffc66d;
-  }
-  .high {
-    color: #cc7833;
-  }
-}
 
-.gutter[gutter-name='flogger'] {
-  width: 3em;
+  .gutter[gutter-name='flogger'] {
+    width: 3em;
+  }
 }
