@@ -1,7 +1,7 @@
 {
   "name": "flogger",
   "main": "./lib/flogger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A plugin that puts `flog` code complexity data into a gutter",
   "keywords": [],
   "activationCommands": {
