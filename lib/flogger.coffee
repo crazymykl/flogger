@@ -1,4 +1,5 @@
-{CompositeDisposable, BufferedProcess} = require 'atom'
+{CompositeDisposable} = require 'atom'
+{complexityOf} = require './flog-adapter'
 
 module.exports = Flogger =
   markers: null
@@ -27,21 +28,6 @@ module.exports = Flogger =
     @statusBarTile?.destroy()
     @statusBarTile = null
 
-  parse: (flogData) ->
-    lines = flogData.split "\n"
-
-    total = +lines.shift().match /\d+\.\d+(?=:)/
-    per_method = +lines.shift().match /\d+\.\d+(?=:)/
-
-    methods = []
-    lines.shift()
-
-    while value = lines.shift()
-      [_, complexity, line_num] = value.match /^\s+(\d+\.\d+):.*:(\d+)$/
-      methods.push [+line_num, +complexity]
-
-    [[total, per_method], methods]
-
   toggle: ->
     return unless te = atom.workspace.getActiveTextEditor()
 
@@ -61,33 +47,18 @@ module.exports = Flogger =
 
   watchEditor: (te) ->
     return unless te?.getGrammar()?.name is 'Ruby' and @activeEditors[te.id]?
-    @update te
 
-  update: (te) ->
-    output = ''
-
-    process = new BufferedProcess
-      command: 'flog'
-      args: ['-aqm']
-      stdout: (out) -> output += out
-      exit: (code) =>
-        if code
-          console.error "flog barfed with #{code}"
-        else
-          [[total, per_method], methods] = @parse output
-          @setStatus "Complexity: #{total} (#{per_method}/method)"
-          @setGutter te, methods
-    .process
-
-    if process.stdin.writable
-      process.stdin.write te.getText()
-      process.stdin.end()
+    complexityOf(te.getText()).then (flogData) =>
+      {total, perMethod, methods} = flogData
+      @setStatus "Complexity: #{total} (#{perMethod}/method)"
+      @setGutter te, methods
+    .catch (err) ->
+      console.error err
 
   setStatus: (status) ->
     @status?.textContent = status
 
   setGutter: (te, methods) ->
-    #te = atom.workspace.getActiveTextEditor()
     g = te.gutterWithName('flogger') ? te.addGutter name: 'flogger'
 
     marker.destroy() for marker in @markers

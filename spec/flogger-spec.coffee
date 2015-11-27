@@ -11,9 +11,9 @@ describe "Flogger", ->
   gutterSelector = "::shadow .gutter[gutter-name='flogger']"
 
   beforeEach ->
-    fixturesPath = path.join(__dirname, 'fixtures')
-    workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('flogger')
+    fixturesPath = path.join __dirname, 'fixtures'
+    workspaceElement = atom.views.getView atom.workspace
+    activationPromise = atom.packages.activatePackage 'flogger'
     atom.project.setPaths [fixturesPath]
 
     waitsForPromise ->
@@ -42,3 +42,12 @@ describe "Flogger", ->
         expect(floggerElement).toBeVisible()
         atom.commands.dispatch workspaceElement, 'flogger:toggle'
         expect(floggerElement).not.toBeVisible()
+
+    it "debugs", ->
+      atom.commands.dispatch workspaceElement, 'flogger:toggle'
+
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        flogger = atom.packages.getActivePackage('flogger').mainModule
