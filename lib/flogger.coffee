@@ -18,6 +18,10 @@ module.exports = Flogger =
       default: 20
       minimum: 1
 
+    flogCommand:
+      type: 'string'
+      default: 'flog'
+
   activate: (state) ->
     @markers = []
     @activeEditors = {}

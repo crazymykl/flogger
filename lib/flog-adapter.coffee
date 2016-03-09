@@ -20,7 +20,7 @@ complexityOf = (code) ->
     output = ''
 
     process = new BufferedProcess
-      command: 'flog'
+      command: atom.config.get 'flogger.flogCommand'
       args: ['-aqm']
       stdout: (out) -> output += out
       exit: (code) ->
