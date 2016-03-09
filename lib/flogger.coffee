@@ -7,6 +7,17 @@ module.exports = Flogger =
   subscriptions: null
   statusBarTile: null
 
+  config:
+    mediumThreshold:
+      type: 'number'
+      default: 10
+      minimum: 1
+
+    highThreshold:
+      type: 'number'
+      default: 20
+      minimum: 1
+
   activate: (state) ->
     @markers = []
     @activeEditors = {}
@@ -46,7 +57,7 @@ module.exports = Flogger =
     @watchEditor atom.workspace.getActiveTextEditor()
 
   watchEditor: (te) ->
-    return unless te?.getGrammar()?.name is 'Ruby' and @activeEditors[te.id]?
+    return unless te?.getGrammar()?.name in ['Ruby', 'Ruby on Rails'] and @activeEditors[te.id]?
 
     complexityOf(te.getText()).then (flogData) =>
       {total, perMethod, methods} = flogData
@@ -74,6 +85,6 @@ module.exports = Flogger =
 
   classify: (complexity) ->
     switch
-      when complexity < 10 then 'low'
-      when complexity < 20 then 'medium'
+      when complexity < atom.config.get('flogger.mediumThreshold') then 'low'
+      when complexity < atom.config.get('flogger.highThreshold') then 'medium'
       else 'high'
