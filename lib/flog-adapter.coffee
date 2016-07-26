@@ -23,6 +23,9 @@ complexityOf = (code) ->
       command: atom.config.get 'flogger.flogCommand'
       args: ['-aqm']
       stdout: (out) -> output += out
+      stderr: (err) ->
+        console.error("Flogger encountered an error while executing command:")
+        console.error(err)
       exit: (code) ->
         if code
           reject new Error "flog barfed with #{code}"
