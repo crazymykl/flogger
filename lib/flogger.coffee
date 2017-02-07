@@ -83,7 +83,7 @@ module.exports = Flogger =
       m = te.markBufferRange [[line_num - 1, 0], [line_num - 1, 0]]
       d = document.createElement 'span'
       d.classList.add @classify complexity
-      d.textContent = complexity
+      d.textContent = complexity.toFixed 1
       g.decorateMarker m, item: d, class: 'flogger'
       @markers.push m
 

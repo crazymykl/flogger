@@ -10,7 +10,7 @@ parse = (flogData) ->
   lines.shift()
 
   while value = lines.shift()
-    [_, complexity, line_num] = value.match /^\s+(\d+\.\d+):.*:(\d+)$/
+    [_, complexity, line_num] = value.match /^\s+(\d+\.\d+):.*:(\d+)(?:-\d+)?$/
     methods.push [+line_num, +complexity]
 
   {total, perMethod, methods}
