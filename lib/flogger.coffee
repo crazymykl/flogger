@@ -22,6 +22,10 @@ module.exports = Flogger =
       type: 'string'
       default: 'flog'
 
+    enabledByDefault:
+      type: 'boolean'
+      default: false
+
   activate: (state) ->
     @markers = []
     @activeEditors = {}
@@ -32,6 +36,7 @@ module.exports = Flogger =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'flogger:toggle': => @toggle()
     @subscriptions.add atom.workspace.onDidStopChangingActivePaneItem (item) => @watchCurrentEditor()
+    @subscriptions.add atom.workspace.onDidStopChangingActivePaneItem (item) => @autoToggle(item)
 
   consumeStatusBar: (statusBar) ->
     @status = document.createElement 'span'
@@ -55,6 +60,10 @@ module.exports = Flogger =
       @activeEditors[te.id] = updater
       @subscriptions.add updater
       @watchCurrentEditor()
+
+  autoToggle: (item) ->
+    if atom.config.get('flogger.enabledByDefault')
+      @toggle()
 
   watchCurrentEditor: ->
     @setStatus ''
